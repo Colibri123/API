@@ -44,7 +44,7 @@ namespace APISERVER
 
             string token = Token.Match(data).Groups["token"].Value;
 
-            if (data.Contains("api.test/v1/nameUser&access_token"))
+            if (data.Contains("api.test/v1/nameUser"))
             {
                 dataTable = sQLRequest.Request(@$"SELECT *
                                                   From NameDS JOIN
@@ -57,11 +57,16 @@ namespace APISERVER
                     Age = DataColumn.Field<int>("Age")
 
                 }).ToList();
+                if (nameUser.Count == 0)
+                {
+                    data = errors.Error101();
+                    return data;
+                }
                 data = JsonConvert.SerializeObject(nameUser, Formatting.Indented, new JsonSerializerSettings { });
                 requestTrue = true;
             }
 
-            if (data.Contains(@$"api.test/v1/nameUser&userID={string.Join(",", ids)}&access_token"))
+            if (data.Contains(@$"api.test/v1/nameUser&userID={string.Join(",", ids)}"))
             {
                 dataTable = sQLRequest.Request(@$"SELECT * 
                                                   From NameDS JOIN TokenDS ON TokenDS.Token = '{token}' 
@@ -75,6 +80,10 @@ namespace APISERVER
                     Age = DataColumn.Field<int>("Age")
 
                 }).ToList();
+                if (nameUser.Count == 0)
+                {
+                    data = errors.Error101();
+                }
                 data = JsonConvert.SerializeObject(nameUser,
                 Formatting.Indented,
                 new JsonSerializerSettings { });
@@ -84,6 +93,7 @@ namespace APISERVER
             else if (requestTrue != true)
             {
                 data = errors.Error120();
+                return data;
             }
             return data;
         }

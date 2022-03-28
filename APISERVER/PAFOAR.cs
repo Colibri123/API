@@ -11,20 +11,17 @@ using System.Threading.Tasks;
 namespace APISERVER
 {
     public class PAFOAR
-    {
-        Errors errors = new Errors();
-        NameDS nameDS = new NameDS();
-
-        string f = "";
+    {        
+        
         public string DataProcessing(string data)
         {
-            Auth auth = new Auth();           
+            NameDS nameDS = new NameDS();
+            Auth auth = new Auth();   
 
             if (data.Contains("api.test/v1/login"))
             {
                 char[] delimiterChars = { ' ', ',', ':', '/','=','&' };
                 var f = data.Split(delimiterChars);
-
                 data = auth.LogIn(f[4], f[6]);
             }
 

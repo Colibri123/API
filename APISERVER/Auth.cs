@@ -42,11 +42,6 @@ namespace APISERVER
 
             }).ToList();
 
-            //if (nameUser.Count == 0)
-            //{
-            //    resoult =  errors.UserError();
-            //}
-
             if (nameUser.Select(a=>a.Actual).First() == 0 || nameUser.Count == 0)
             {
                 resoult = errors.Error100();
