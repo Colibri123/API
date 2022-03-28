@@ -12,7 +12,7 @@ namespace APISERVER
         public int CodeError { get; set; }
         public string Error { get; set; }
 
-        public string Errors120() 
+        public string Error120() 
         {
             string res = "";
             Errors errors = new Errors
@@ -35,6 +35,21 @@ namespace APISERVER
             {
                 CodeError = 100,
                 Error = "authorization error please try again later"
+            };
+            res = JsonConvert.SerializeObject(errors,
+            Formatting.Indented, new JsonSerializerSettings { });
+            return res;
+        }
+
+        public string Error101()
+        {
+            string res = "";
+
+            Errors errors = new Errors
+
+            {
+                CodeError = 100,
+                Error = "Token Initialization error"
             };
             res = JsonConvert.SerializeObject(errors,
             Formatting.Indented, new JsonSerializerSettings { });

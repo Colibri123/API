@@ -28,16 +28,10 @@ namespace APISERVER
                 data = auth.LogIn(f[4], f[6]);
             }
 
-            //switch (data)
-            //{
-            //    case "api.test/v1/nameUser":
-            //        data =  nameDS.Get(data);
-            //        break;
-
-            //        default:
-            //        data = errors.GetErrors(data);
-            //        break;
-            //}
+            if (data.Contains("api.test/v1/nameUser"))
+            {
+                data = nameDS.Get(data);
+            }           
             return data;
         }
                 

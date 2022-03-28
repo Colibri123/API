@@ -32,11 +32,7 @@ try
             stream.Write(data_, 0, data_.Length);
             data_ = new Byte[256];
             String responseData = String.Empty;
-            if (req == "exit" || req == "Exit")
-            {
-                Console.WriteLine("server shortdown");
-                tcpListener.Stop();
-            }
+            
         }       
         
     }
