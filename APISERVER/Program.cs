@@ -5,7 +5,7 @@ using System.Text;
 
 TcpListener tcpListener = new TcpListener(IPAddress.Any, 7000);
 TcpClient client = null;
-PAFOAR pAFOAR = new PAFOAR();
+DataProcessing pAFOAR = new DataProcessing();
 try
 {
     
@@ -28,7 +28,7 @@ try
             byte[] data = new byte[256];
             string req = Encoding.ASCII.GetString(data, 0, stream.Read(data, 0, data.Length));
             
-            Byte[] data_ = System.Text.Encoding.ASCII.GetBytes(pAFOAR.DataProcessing(req));
+            Byte[] data_ = System.Text.Encoding.ASCII.GetBytes(pAFOAR.request(req));
             stream.Write(data_, 0, data_.Length);
             data_ = new Byte[256];
             String responseData = String.Empty;

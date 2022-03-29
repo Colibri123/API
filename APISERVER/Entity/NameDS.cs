@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using APISERVER.Struct;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,12 +12,11 @@ namespace APISERVER
 {
     
     public class NameDS
-    {       
-        public Guid UserID { get; set; }
-        public string Name { get; set; }
-        public string Gender { get; set;}
+    {
+        public string UserName { get; set; }
+        public string Gender { get; set; }
+        public Guid? UserID { get; set; }
         public int Age { get; set; }
-
         public string Get(string data)
         {
 
@@ -48,11 +48,12 @@ namespace APISERVER
             {
                 dataTable = sQLRequest.Request(@$"SELECT *
                                                   From NameDS JOIN
-                                                  TokenDS ON TokenDS.Token = '{token}'");
+                                                  TokenDS ON TokenDS.Token = '{token}' AND 
+                                                  TokenDS.UserActualID = '6A34703A-2D63-40CE-898A-4664D3983E51'");
                 var nameUser = dataTable.Tables[0].AsEnumerable().Select(DataColumn => new NameDS
                 {
                     UserID = DataColumn.Field<Guid>("UserID"),
-                    Name = DataColumn.Field<string>("Name"),
+                    UserName = DataColumn.Field<string>("Name"),
                     Gender = DataColumn.Field<string>("Gender"),
                     Age = DataColumn.Field<int>("Age")
 
@@ -69,13 +70,15 @@ namespace APISERVER
             if (data.Contains(@$"api.test/v1/nameUser&userID={string.Join(",", ids)}"))
             {
                 dataTable = sQLRequest.Request(@$"SELECT * 
-                                                  From NameDS JOIN TokenDS ON TokenDS.Token = '{token}' 
+                                                  From NameDS JOIN
+                                                  TokenDS ON TokenDS.Token = '{token}' AND 
+                                                  TokenDS.UserActualID = '6A34703A-2D63-40CE-898A-4664D3983E51' 
                                                   { ($"WHERE UserID IN('{string.Join("','", ids)}') ")}");
                                                    
                 var nameUser = dataTable.Tables[0].AsEnumerable().Select(DataColumn => new NameDS
                 {
                     UserID = DataColumn.Field<Guid>("UserID"),
-                    Name = DataColumn.Field<string>("Name"),
+                    UserName = DataColumn.Field<string>("Name"),
                     Gender = DataColumn.Field<string>("Gender"),
                     Age = DataColumn.Field<int>("Age")
 

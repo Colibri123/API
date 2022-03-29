@@ -48,7 +48,7 @@ namespace APISERVER
             Errors errors = new Errors
 
             {
-                CodeError = 100,
+                CodeError = 101,
                 Error = "Token Initialization error"
             };
             res = JsonConvert.SerializeObject(errors,
