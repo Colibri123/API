@@ -59,6 +59,12 @@ namespace APISERVER
                 var f = data.Split(delimiterChars);
                 data = messeges.SendMesseges(mess: f[8], dialogeID: f[4], userID: f[6], token:f[10]);
             }
+            if (data.Contains("api.test/v1/dialogeListFind"))
+            {
+                char[] delimiterChars = { '/', '=', '&' };
+                var f = data.Split(delimiterChars);
+                data = dialogueListDS.DialogFind(token: f[6], nameDialoge: f[4]);
+            }
             return data;
         }
 
