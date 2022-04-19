@@ -19,7 +19,7 @@ namespace APISERVER
 
             {
                 CodeError = 120,
-                Error = "invalid request"
+                Error = "Неверный запрос"
             };
             res = JsonConvert.SerializeObject(errors,
             Formatting.Indented, new JsonSerializerSettings { });
@@ -34,7 +34,7 @@ namespace APISERVER
 
             {
                 CodeError = 100,
-                Error = "authorization error please try again later"
+                Error = "Ошибка авторизации, повторите попытку входа"
             };
             res = JsonConvert.SerializeObject(errors,
             Formatting.Indented, new JsonSerializerSettings { });
@@ -49,7 +49,22 @@ namespace APISERVER
 
             {
                 CodeError = 101,
-                Error = "Token Initialization error"
+                Error = "Ошибка инициализации токена"
+            };
+            res = JsonConvert.SerializeObject(errors,
+            Formatting.Indented, new JsonSerializerSettings { });
+            return res;
+        }
+
+        public string Error102()
+        {
+            string res = "";
+
+            Errors errors = new Errors
+
+            {
+                CodeError = 102,
+                Error = "Доступ ограничен"
             };
             res = JsonConvert.SerializeObject(errors,
             Formatting.Indented, new JsonSerializerSettings { });

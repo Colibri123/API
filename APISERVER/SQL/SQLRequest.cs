@@ -14,7 +14,7 @@ namespace APISERVER
         {
             DataSet dataTable = new DataSet("dataBase");                // создаём таблицу в приложении
                                                                             // подключаемся к базе данных
-            SqlConnection sqlConnection = new SqlConnection("server=DESKTOP-ONNJAH5;Trusted_Connection=Yes;DataBase=BD_on_API;");
+            SqlConnection sqlConnection = new SqlConnection("server=WIN-PSV22RG97BM;Trusted_Connection=Yes;DataBase=BD_on_API;");
             sqlConnection.Open();                                           // открываем базу данных
             SqlCommand sqlCommand = sqlConnection.CreateCommand();          // создаём команду
             sqlCommand.CommandText = selectSQL;                             // присваиваем команде текст

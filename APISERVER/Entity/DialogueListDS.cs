@@ -1,50 +1,68 @@
 ﻿using APISERVER.Struct;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Data;
 
 namespace APISERVER.Entity
 {
     public class DialogueListDS
     {
-        public string dialogueListGet(string nameid,string token)
+        public string dialogueListGet(string nameid, string token)
         {
             Errors errors = new Errors();
             SQLRequest sQLRequest = new SQLRequest();
             DataSet dataTable = new DataSet();
             string data;
 
-            dataTable = sQLRequest.Request(@$"SELECT  MessegesListDS.DateOfDispatch,
-                                              		  MessegesListDS.DialogueID,
-                                              		  MessegesListDS.Messeges,
-                                              		  MessegesListDS.MessegesID,
-                                              		  NameDS.Name,
-                                                      NameDS.UserID,
-                                                      DialogueDS.DialogueName
+            dataTable = sQLRequest.Request(@$"SELECT NameDS.UserID 
+                                              FROM TokenDS INNER JOIN
+                                              NameDS ON TokenDS.IDUser = NameDS.UserID AND
+                                              TokenDS.Token = '{token}'");
+            var tokenGet = dataTable.Tables[0].AsEnumerable().Select(DataColumn => new UserStruct
+            {
+                UserID = DataColumn.Field<Guid>("UserID")
+
+            }).ToList();
+
+            if (tokenGet.Select(a => a.UserID).First().ToString() != nameid)
+            {
+                data = errors.Error102();
+                return data;
+            }
+
+            dataTable = sQLRequest.Request(@$"SELECT  NameDS.UserID,
+                                                      DialogueDS.DialogueName,
+                                                      DialogueDS.DialogueID
                                               FROM DialogueListDS INNER JOIN
-                                              MessegesListDS ON DialogueListDS.DialogueID = MessegesListDS.DialogueID LEFT JOIN
-                                              NameDS ON MessegesListDS.UserID =NameDS.UserID INNER JOIN
-                                              DialogueDS ON DialogueListDS.DialogueID = DialogueDS.DialogueID JOIN 
-                                              DialogueListDS as f ON f.UserID = '{nameid}' JOIN
+                                              NameDS ON DialogueListDS.UserID = NameDS.UserID AND
+                                              NameDS.UserID = '{nameid}' INNER JOIN 
+                                              DialogueDS on DialogueListDS.DialogueID = DialogueDS.DialogueID JOIN
                                               TokenDS ON TokenDS.Token = '{token}' AND 
                                               TokenDS.UserActualID = '6A34703A-2D63-40CE-898A-4664D3983E51'");
 
+
+
             var dialogGet = dataTable.Tables[0].AsEnumerable().Select(DataColumn => new DialogueListStruct
             {
-                DialogueID = DataColumn.Field<Guid>("DialogueID"),
-                MessegesID = DataColumn.Field<Guid>("MessegesID"),
                 UserID = DataColumn.Field<Guid>("UserID"),
-                DateOfDispatch = DataColumn.Field<DateTime>("DateOfDispatch"),
+                DialogueID = DataColumn.Field<Guid>("DialogueID"),
                 DialogueName = DataColumn.Field<string>("DialogueName"),
-                Messeges = DataColumn.Field<string>("Messeges"),
-                Name = DataColumn.Field<string>("Name"),
-
-            }).GroupBy(a=>a.DialogueName).ToList();
+            }).ToList();
 
             //var LastDateTime = dialogGet.Find(a => a.DateOfDispatch == dialogGet.Select(b=>b.DateOfDispatch).Max());
 
-            data = JsonConvert.SerializeObject(dialogGet,
-            Formatting.Indented,
-            new JsonSerializerSettings { });
+            JObject rss = new JObject(
+        new JProperty("user",
+            new JObject(
+                new JProperty("dialogesList",
+                    new JArray(
+                        from p in dialogGet
+                        select new JObject(
+                            new JProperty("userID", p.UserID),
+                            new JProperty("dialogueID", p.DialogueID),
+                            new JProperty("dialogueName", p.DialogueName)
+                            ))))));
+
+            data = rss.ToString();
             return data;
         }
     }

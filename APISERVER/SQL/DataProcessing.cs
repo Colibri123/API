@@ -12,6 +12,7 @@ namespace APISERVER
             Errors errors = new Errors();
             DialogueDS dialogueDS = new DialogueDS();
             DialogueListDS dialogueListDS = new DialogueListDS();
+            Messeges messeges = new Messeges();
 
             
 
@@ -39,11 +40,24 @@ namespace APISERVER
                 var f = data.Split(delimiterChars);
                 data = dialogueDS.DialogGet(f[3], f[4]);
             }
+            
             if (data.Contains("api.test/v1/dialogListGet"))
             {
                 char[] delimiterChars = { ' ', ',', ':', '/', '=', '&' };
                 var f = data.Split(delimiterChars);
                 data = dialogueListDS.dialogueListGet(f[4], f[6]);
+            }
+            if (data.Contains("api.test/v1/messegesGet"))
+            {
+                char[] delimiterChars = { ' ', ',', ':', '/', '=', '&' };
+                var f = data.Split(delimiterChars);
+                data = messeges.GetMesseges(f[6], f[4]);
+            }
+            if (data.Contains("api.test/v1/messegesSend"))
+            {
+                char[] delimiterChars = { '/', '=', '&' };
+                var f = data.Split(delimiterChars);
+                data = messeges.SendMesseges(mess: f[8], dialogeID: f[4], userID: f[6], token:f[10]);
             }
             return data;
         }

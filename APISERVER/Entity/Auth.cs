@@ -72,7 +72,9 @@ namespace APISERVER
 
                 if (AOtoken.Count == 0)
                 {
-                    dataTable = sQLRequest.Request(@$"INSERT INTO TokenDS (TokenID, UserID, TokenLife,Token,UserActualID) 
+                    string f = @$"INSERT INTO TokenDS (TokenID, UserID, TokenLife,Token,UserActualID) 
+                                                      VALUES (NEWID(), '{nameUser.Select(a => a.IDName).First()}', '{DateTime.Now.AddHours(1)}','{aOToken.RandomString()}','6a34703a-2d63-40ce-898a-4664d3983e51')";
+                    dataTable = sQLRequest.Request(@$"INSERT INTO TokenDS (TokenID, IDUser, TokenLife,Token,UserActualID) 
                                                       VALUES (NEWID(), '{nameUser.Select(a => a.IDName).First()}', '{DateTime.Now.AddHours(1)}','{aOToken.RandomString()}','6a34703a-2d63-40ce-898a-4664d3983e51')");
                     dataTable = sQLRequest.Request(@$"SELECT TokenDS.Token
                                                   FROM TokenDS INNER JOIN
@@ -93,7 +95,8 @@ namespace APISERVER
                                 login = new
                                 {
                                     loginUser = nameUser.Select(a => a.Login),
-                                    token = AOtoken.Select(a => a.Token)
+                                    token = AOtoken.Select(a => a.Token),
+                                    userID = nameUser.Select(a=>a.IDName).First()
                                 }
                             }
                         }
@@ -128,7 +131,8 @@ namespace APISERVER
                                 login = new
                                 {
                                     loginUser = nameUser.Select(a => a.Login).First(),
-                                    token = dateTame.Token
+                                    token = dateTame.Token,
+                                    userID = nameUser.Select(a => a.IDName).First()
                                 }
                             }
                         }
@@ -162,7 +166,8 @@ namespace APISERVER
                                 login = new
                                 {
                                     loginUser = nameUser.Select(a=>a.Login).First(),
-                                    token = dateTame.Token
+                                    token = dateTame.Token,
+                                    userID = nameUser.Select(a=>a.IDName).First()
                                 }
                             }
                         }
